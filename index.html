@@ -1,0 +1,78 @@
+<html>
+<head>
+<title>Product Quest</title>
+
+<!-- External libraries -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.6/handlebars.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Template stuff -->
+<link rel="stylesheet" href="styles.css">
+<script src="main.js"></script>
+
+<!-- Template for the main menu / categories -->
+<script id="menu-template" type="text/x-handlebars-template">
+	<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm mb-4">
+		<a class="navbar-brand" href="#" onclick="showAllProducts();">Product Quest</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNav">
+			<ul class="navbar-nav">
+				{{#each this as |category|}}
+					<li class="nav-item">
+						<a class="nav-link" href="#" onclick="showCategory('{{category.name}}');">{{category.name}}</a>
+					</li>
+				{{/each}}
+			</ul>
+			<ul class="navbar-nav ml-auto">
+				<li class="nav-item">
+					<a href="mailto:phill@sheety.co?subject=Submit Product" class="btn btn-outline-primary">Submit Product</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+</script>
+
+<!-- Template for the products -->
+<script id="products-template" type="text/x-handlebars-template">
+	<h3>{{title}}</h3>
+	<div class="shadow-sm bg-white rounded-lg">
+		{{#each this.products as |product|}}
+			<div class="media border-bottom p-3" id="product-{{product.id}}">
+				<img src="{{product.iconUrl}}" width="50" class="mr-3">
+				<div class="media-body">
+					<h6 class="m-0">
+						<a href="{{product.website}}" target="_blank">{{product.name}}</a>
+					</h6>
+					<p class="m-0">{{product.shortDescription}}</p>
+					<p class="m-0 text-muted"><small>{{product.category}}</small></p>
+				</div>
+				<button class="btn btn-outline-primary" onclick="upvoteProduct({{product.id}});" {{#if product.hasVoted}}disabled{{/if}}>
+					&#x21e7; {{product.votes}}
+				</button>
+			</div>
+		{{/each}}
+		{{#unless this.products}}
+			<p class="p-5 text-center text-muted">No products found</p>
+		{{/unless}}
+	</div>
+</script>
+</head>
+<body class="bg-light">
+	<div id="menu-container"></div>
+	<div class="container" id="products-container">
+		<!-- Loading indicator: this gets replaced when we have products -->
+		<div class="text-center p-5 m-5">
+			<div class="text-muted p-2">Loading products...</div>
+			<div class="spinner-border text-primary" role="status"></div>
+		</div>
+	</div>
+	<div class="container" id="footer">
+		<div class="text-muted text-center p-3">Powered by <a href="https://sheety.co">Sheety</a></div>
+	</div>
+</body>
+</html>
